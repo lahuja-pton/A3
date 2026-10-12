@@ -16,7 +16,7 @@ void SymTable_free(SymTable_T oSymTable) {
     if (p == NULL) return;
     q = p->next;
     while (q) {
-        free(p->key);
+        free((char*)p->key);
         free(p);
         p = q;
         q = q->next;
@@ -41,7 +41,7 @@ int SymTable_put(SymTable_T oSymTable,
         }
         p = (struct Node*)calloc(1, sizeof(struct Node));
         p->key = (const char*)malloc(strlen(pcKey)+1);
-        strcpy(p->key, pcKey);
+        strcpy((char*)p->key, pcKey);
         p->value = pvValue;
         p->next = oSymTable->first;
         oSymTable->first = p;
@@ -56,8 +56,8 @@ void *SymTable_replace(SymTable_T oSymTable,
 
         p = oSymTable->first;
         while (p) {
-            if (strcmp(p->key, pcKey) == 0) {
-                void* value = p->value;
+            if (strcmp((char*)p->key, pcKey) == 0) {
+                void* value = (void*)p->value;
                 p->value = pvValue;
                 return value;
             }
@@ -72,7 +72,7 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
 
     p = oSymTable->first;
     while (p) {
-        if (strcmp(p->key, pcKey) == 0) return 1;
+        if (strcmp((char*)p->key, pcKey) == 0) return 1;
         p = p->next;
     }
     return 0;
@@ -84,7 +84,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
 
     p = oSymTable->first;
     while (p) {
-        if (strcmp(p->key, pcKey) == 0) return p->value;
+        if (strcmp((char*)p->key, pcKey) == 0) return (void*)p->value;
         p = p->next;
     }
     return NULL;
