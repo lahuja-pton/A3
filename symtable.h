@@ -1,7 +1,8 @@
 #ifndef SYM_TABLE_H
 #define SYM_TABLE_H
 
-#include <stddef.h>
+#include <stdlib.h>
+#include <assert.h>
 
 typedef struct SymTable* SymTable_T;
 
