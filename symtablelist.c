@@ -32,7 +32,7 @@ size_t SymTable_getLength(SymTable_T oSymTable) {
 int SymTable_put(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue) {
         struct Node* node;
-        assert(oSymTable != NULL && pcKey && pvValue);
+        assert(oSymTable != NULL && pcKey);
 
         node = oSymTable->first;
         while (node) {
@@ -54,7 +54,7 @@ void *SymTable_replace(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue) {
         struct Node* node;
         void* value;
-        assert(oSymTable != NULL && pcKey && pvValue);
+        assert(oSymTable != NULL && pcKey);
 
         node = oSymTable->first;
         while (node) {
