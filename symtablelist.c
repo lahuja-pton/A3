@@ -70,7 +70,7 @@ void *SymTable_replace(SymTable_T oSymTable,
 
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     struct Node* node;
-    assert(oSymTable != NULL && pcKey && node);
+    assert(oSymTable != NULL && pcKey);
 
     node = oSymTable->first;
     while (node) {
