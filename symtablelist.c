@@ -99,7 +99,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     q = oSymTable->first;
     while (q) {
         if (strcmp(q->key, pcKey) == 0) {
-            if (p == NULL) oSymTable->first = NULL;
+            if (p == NULL) oSymTable->first = q->next;
             else p->next = q->next;
             value = (void*)q->value;
             free(q);
