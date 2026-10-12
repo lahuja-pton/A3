@@ -52,12 +52,13 @@ int SymTable_put(SymTable_T oSymTable,
 void *SymTable_replace(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue) {
         struct Node* p;
+        void* value;
         assert(oSymTable);
 
         p = oSymTable->first;
         while (p) {
             if (strcmp((char*)p->key, pcKey) == 0) {
-                void* value = (void*)p->value;
+                value = (void*)p->value;
                 p->value = pvValue;
                 return value;
             }
@@ -92,6 +93,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
 
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     struct Node *p = NULL, *q;
+    void* value;
     assert(oSymTable);
 
     q = oSymTable->first;
@@ -99,7 +101,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
         if (strcmp(q->key, pcKey) == 0) {
             if (p == NULL) oSymTable->first = NULL;
             else p->next = q->next;
-            void* value = q->value;
+            value = (void*)q->value;
             free(q);
             oSymTable->size--;
             return value;
@@ -118,7 +120,7 @@ void SymTable_map(SymTable_T oSymTable,
 
         p = oSymTable->first;
         while (p) {
-            (*pfApply)(p->key, p->value, pvExtra);
+            (*pfApply)(p->key, (char*)p->value, (void*)pvExtra);
             p = p->next;
         }
 }
