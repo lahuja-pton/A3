@@ -31,17 +31,13 @@ void SymTable_free(SymTable_T oSymTable) {
     assert(oSymTable != NULL);
 
     for (idx = 0; idx < SIZES[oSymTable->iCapacity]; idx++) {
-        bind1 = oSymTable->buckets[idx];
-        if (bind1 == NULL) continue;
-        bind2 = bind1->next;
-        while (bind2) {
+        for (bind1 = oSymTable->buckets[idx]; bind1; bind1 = bind2) {
+            bind2 = bind1->next;
             free((char*)bind1->key);
             free(bind1);
-            bind1 = bind2;
-            bind2 = bind2->next;
         }
-        free(bind1);
     }
+    free(oSymTable->buckets);
     free(oSymTable);
 }
 
