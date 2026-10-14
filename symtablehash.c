@@ -2,7 +2,7 @@
 
 static const size_t SIZES[] = 
     {509, 1021, 2039, 4093, 8191, 16381, 32749, 65521};
-static const size_t SIZE_LEN = 8;
+static const int SIZE_LEN = 8;
 static size_t SymTable_hash(const char *pcKey, size_t uBucketCount);
 static void expand(SymTable_T oSymTable);
 
@@ -27,10 +27,11 @@ SymTable_T SymTable_new(void) {
 
 void SymTable_free(SymTable_T oSymTable) {
     struct Binding *bind1, *bind2;
+    size_t idx;
     assert(oSymTable != NULL);
 
-    for (int i = 0; i < SIZES[oSymTable->iCapacity]; i++) {
-        bind1 = oSymTable->buckets[i];
+    for (idx = 0; idx < SIZES[oSymTable->iCapacity]; idx++) {
+        bind1 = oSymTable->buckets[idx];
         if (bind1 == NULL) continue;
         bind2 = bind1->next;
         while (bind2) {
