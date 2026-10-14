@@ -22,6 +22,7 @@ SymTable_T SymTable_new(void) {
     table->iCapacity = SIZES[0];
     table->buckets = (struct Binding**)
         calloc(SIZES[0], sizeof(struct Binding*));
+    return table;
 }
 
 void SymTable_free(SymTable_T oSymTable) {
