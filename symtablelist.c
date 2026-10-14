@@ -13,16 +13,15 @@ void SymTable_free(SymTable_T oSymTable) {
     assert(oSymTable != NULL);
 
     node1 = oSymTable->first;
+    node2 = node1;
     free(oSymTable);
     if (node1 == NULL) return;
-    node2 = node1->next;
-    while (node2) {
+    while (node1) {
+        if (node2->next) node2 = node1->next;
         free((char*)node1->key);
         free(node1);
         node1 = node2;
-        node2 = node2->next;
     }
-    free(node1);
 }
 
 size_t SymTable_getLength(SymTable_T oSymTable) {
