@@ -18,7 +18,7 @@ struct Binding {
 };
 
 SymTable_T SymTable_new(void) {
-    SymTable_T table = (SymTable_T)calloc(1, sizeof(SymTable_T));
+    SymTable_T table = (SymTable_T)calloc(1, sizeof(struct SymTable));
     table->iCapacity = 0;
     table->buckets = (struct Binding**)
         calloc(SIZES[0], sizeof(struct Binding*));
