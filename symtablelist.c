@@ -1,6 +1,6 @@
 #include "symtable.h"
 
-struct SymTable {size_t size; struct Node* first;};
+struct SymTable {size_t numBindings; struct Node* first;};
 struct Node {const char* key; const void* value; struct Node* next;};
 
 SymTable_T SymTable_new(void) {
@@ -26,7 +26,7 @@ void SymTable_free(SymTable_T oSymTable) {
 
 size_t SymTable_getLength(SymTable_T oSymTable) {
     assert(oSymTable != NULL);
-    return oSymTable->size;
+    return oSymTable->numBindings;
 }
 
 int SymTable_put(SymTable_T oSymTable,
@@ -39,6 +39,7 @@ int SymTable_put(SymTable_T oSymTable,
             if (strcmp(node->key, pcKey) == 0) return 0;
             node = node->next;
         }
+        
         node = (struct Node*)calloc(1, sizeof(struct Node));
         if (node == NULL) return 0;
         node->key = (const char*)malloc(strlen(pcKey)+1);
@@ -46,7 +47,7 @@ int SymTable_put(SymTable_T oSymTable,
         node->value = pvValue;
         node->next = oSymTable->first;
         oSymTable->first = node;
-        oSymTable->size++;
+        oSymTable->numBindings++;
         return 1;
 }
 
@@ -86,7 +87,8 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
 
     node = oSymTable->first;
     while (node) {
-        if (strcmp((char*)node->key, pcKey) == 0) return (void*)node->value;
+        if (strcmp((char*)node->key, pcKey) == 0) 
+            return (void*)node->value;
         node = node->next;
     }
     return NULL;
@@ -104,7 +106,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
             else node1->next = node2->next;
             value = (void*)node2->value;
             free(node2);
-            oSymTable->size--;
+            oSymTable->numBindings--;
             return value;
         }
         node1 = node2;
