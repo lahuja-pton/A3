@@ -4,7 +4,9 @@ struct SymTable {size_t numBindings; struct Node* first;};
 struct Node {const char* key; const void* value; struct Node* next;};
 
 SymTable_T SymTable_new(void) {
-    return (SymTable_T)calloc(1, sizeof(SymTable_T));
+    SymTable_T table = (SymTable_T)calloc(1, sizeof(SymTable_T));
+    table->first = NULL;
+    return table;
 }
 
 void SymTable_free(SymTable_T oSymTable) {
