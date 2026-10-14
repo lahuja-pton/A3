@@ -67,6 +67,7 @@ const char *pcKey, const void *pvValue) {
     bind = (struct Binding*)calloc(1, sizeof(struct Binding));
     if (!bind) return 0;
     bind->key = (const char*)malloc(strlen(pcKey)+1);
+    if (!bind->key) return 0;
     strcpy((char*)bind->key, pcKey);
     bind->value = pvValue;
     bind->next = oSymTable->buckets[hash];

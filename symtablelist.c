@@ -43,6 +43,7 @@ int SymTable_put(SymTable_T oSymTable,
         node = (struct Node*)calloc(1, sizeof(struct Node));
         if (node == NULL) return 0;
         node->key = (const char*)malloc(strlen(pcKey)+1);
+        if (!node->key) return 0;
         strcpy((char*)node->key, pcKey);
         node->value = pvValue;
         node->next = oSymTable->first;
@@ -105,6 +106,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
             if (node1 == NULL) oSymTable->first = node2->next;
             else node1->next = node2->next;
             value = (void*)node2->value;
+            free((char*)node2->key);
             free(node2);
             oSymTable->numBindings--;
             return value;
