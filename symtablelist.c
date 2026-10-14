@@ -12,14 +12,13 @@ void SymTable_free(SymTable_T oSymTable) {
     struct Node *node1, *node2;
     assert(oSymTable != NULL);
 
-    node1 = oSymTable->first;
-    free(oSymTable);
     if (!node1) return;
     for (node1 = oSymTable->first; node1; node1 = node2) {
         node2 = node1->next;
         free((char*)node1->key);
         free(node1);
     }
+    free(oSymTable);
 }
 
 size_t SymTable_getLength(SymTable_T oSymTable) {
