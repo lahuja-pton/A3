@@ -17,7 +17,7 @@ void SymTable_free(SymTable_T oSymTable) {
     free(oSymTable);
     if (node1 == NULL) return;
     while (node1) {
-        if (node2->next) node2 = node1->next;
+        if (node2->next) node2 = node2->next;
         free((char*)node1->key);
         free(node1);
         node1 = node2;
