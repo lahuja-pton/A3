@@ -129,6 +129,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
             if (!bind1) oSymTable->buckets[hash] = bind2->next;
             else bind1->next = bind2->next;
             value = (void*)bind2->value;
+            free((char*)bind2->key);
             free(bind2);
             oSymTable->numBindings--;
             return value;
