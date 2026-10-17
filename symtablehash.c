@@ -19,9 +19,14 @@ struct Binding {
 
 SymTable_T SymTable_new(void) {
     SymTable_T table = (SymTable_T)calloc(1, sizeof(struct SymTable));
+    if (!table) return NULL;
     table->iCapacity = 0;
     table->buckets = (struct Binding**)
         calloc(SIZES[0], sizeof(struct Binding*));
+    if (!table->buckets) {
+        free(table);
+        return NULL;
+    }
     return table;
 }
 
@@ -60,10 +65,14 @@ const char *pcKey, const void *pvValue) {
     if (oSymTable->numBindings >= numBuckets)
         expand(oSymTable);
 
+    hash = SymTable_hash(pcKey, SIZES[oSymTable->iCapacity]);
     bind = (struct Binding*)calloc(1, sizeof(struct Binding));
     if (!bind) return 0;
     bind->key = (const char*)malloc(strlen(pcKey)+1);
-    if (!bind->key) return 0;
+    if (!bind->key) {
+        free(bind);
+        return 0;
+    }
     strcpy((char*)bind->key, pcKey);
     bind->value = pvValue;
     bind->next = oSymTable->buckets[hash];

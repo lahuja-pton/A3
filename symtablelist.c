@@ -4,8 +4,7 @@ struct SymTable {size_t numBindings; struct Node* first;};
 struct Node {const char* key; const void* value; struct Node* next;};
 
 SymTable_T SymTable_new(void) {
-    SymTable_T table = (SymTable_T)calloc(1, sizeof(struct SymTable));
-    return table;
+    return (SymTable_T)calloc(1, sizeof(struct SymTable));
 }
 
 void SymTable_free(SymTable_T oSymTable) {
@@ -37,9 +36,12 @@ int SymTable_put(SymTable_T oSymTable,
         }
         
         node = (struct Node*)calloc(1, sizeof(struct Node));
-        if (node == NULL) return 0;
+        if (!node) return 0;
         node->key = (const char*)malloc(strlen(pcKey)+1);
-        if (!node->key) return 0;
+        if (!node->key) {
+            free(node);
+            return 0;
+        }
         strcpy((char*)node->key, pcKey);
         node->value = pvValue;
         node->next = oSymTable->first;
