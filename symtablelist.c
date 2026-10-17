@@ -8,7 +8,12 @@
 
 /* struct to represent linked list for symbol table ADT, holding the 
    size and the first node of the linked list */
-struct SymTable {size_t numBindings; struct Node* first;};
+struct SymTable {
+    /* number of bindings currently in the list */
+    size_t numBindings; 
+    /* pointer to the first node in the list */
+    struct Node* first;
+};
 /* struct to represent a node of the linked list */
 struct Node {
     /* key of the binding */
