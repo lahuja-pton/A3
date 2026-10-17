@@ -45,7 +45,7 @@ size_t SymTable_getLength(SymTable_T oSymTable) {
 
 /* inserts new binding if the binding with key pcKey is not already 
    present. Otherwise, updates the value of the existing binding to 
-   pvValue. */
+   pvValue. Returns whether a new binding was created.  */
 int SymTable_put(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue) {
         struct Node* node;
@@ -92,7 +92,7 @@ void *SymTable_replace(SymTable_T oSymTable,
         return NULL;
 }
 
-/* returns whether oSymtable holds a binding with key pcKey */
+/* returns whether oSymTable holds a binding with key pcKey */
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     struct Node* node;
     assert(oSymTable != NULL && pcKey);
