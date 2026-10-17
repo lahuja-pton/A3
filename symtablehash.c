@@ -1,22 +1,40 @@
+/*--------------------------------------------------------------------*/
+/* strp.c                                                             */
+/* Author: Lakshit Ahuja                                              */
+/* Implements a symbol table through a hash table.                    */
+/*--------------------------------------------------------------------*/
+
 #include "symtable.h"
 
+/* array of all possible capacities of the hash table */
 static const size_t SIZES[] = 
     {509, 1021, 2039, 4093, 8191, 16381, 32749, 65521};
+/* number of possible capacities */
 static const int SIZE_LEN = 8;
+/* Return a hash code for pcKey that is between 0 and uBucketCount-1,
+   inclusive */
 static size_t SymTable_hash(const char *pcKey, size_t uBucketCount);
+/* Expands the hash table capacity to the next size according to the 
+   SIZES array, rehashing all bindings in the process */
 static void expand(SymTable_T oSymTable);
 
+/* struct to represent hash table for symbol table ADT, holding the 
+   current capacity of the hash table, the number of bindings, and 
+   a pointer to the array of binding pointers */
 struct SymTable {
     int iCapacity;
     size_t numBindings;
     struct Binding** buckets;
 };
+/* struct to represent a binding of the table, holding the key-value 
+   pair and a pointer to the next pointer in the list*/
 struct Binding {
     const char* key; 
     const void* value; 
     struct Binding* next;
 };
 
+/* returns new instance of the symbol table */
 SymTable_T SymTable_new(void) {
     SymTable_T table = (SymTable_T)calloc(1, sizeof(struct SymTable));
     if (!table) return NULL;
@@ -30,6 +48,7 @@ SymTable_T SymTable_new(void) {
     return table;
 }
 
+/* frees all memory held by the symbol table */
 void SymTable_free(SymTable_T oSymTable) {
     struct Binding *bind1, *bind2;
     size_t idx;
@@ -46,11 +65,14 @@ void SymTable_free(SymTable_T oSymTable) {
     free(oSymTable);
 }
 
+/* returns number of bindings held by the table */
 size_t SymTable_getLength(SymTable_T oSymTable) {
     assert(oSymTable != NULL);
     return oSymTable->numBindings;
 }
 
+/* inserts new binding if the binding is not already present. Otherwise,
+   updates the value of the existing binding */
 int SymTable_put(SymTable_T oSymTable,
 const char *pcKey, const void *pvValue) {
     struct Binding* bind;
@@ -82,6 +104,7 @@ const char *pcKey, const void *pvValue) {
     return 1;
 }
 
+/* updates value of binding associated with provided key if present */
 void *SymTable_replace(SymTable_T oSymTable,
 const char *pcKey, const void *pvValue) {
     struct Binding* bind;
@@ -100,6 +123,7 @@ const char *pcKey, const void *pvValue) {
     return NULL;
 }
 
+/* returns whether the table holds a binding with the provided key */
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     struct Binding* bind;
     size_t hash;
@@ -112,6 +136,8 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     return 0;
 }
 
+/* returns the value associated with the provided key if present 
+   in the table */
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     struct Binding* bind;
     size_t hash;
@@ -125,6 +151,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     return NULL;
 }
 
+/* removes binding associated with key if present */
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     struct Binding *bind1, *bind2;
     void* value;
@@ -148,6 +175,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     return NULL;
 }
 
+/* runs the provided function on all bindings within the table */
 void SymTable_map(SymTable_T oSymTable, 
 void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
 const void *pvExtra) {
@@ -187,9 +215,6 @@ static void expand(SymTable_T oSymTable) {
     oSymTable->buckets = buckets;
     oSymTable->iCapacity++;
 }
-
-/* Return a hash code for pcKey that is between 0 and uBucketCount-1,
-   inclusive. */
 
 static size_t SymTable_hash(const char *pcKey, size_t uBucketCount) {
    const size_t HASH_MULTIPLIER = 65599;
