@@ -14,7 +14,7 @@ static const int SIZE_LEN = 8;
 /* Return a hash code for pcKey that is between 0 and uBucketCount-1,
    inclusive */
 static size_t SymTable_hash(const char *pcKey, size_t uBucketCount);
-/* Expands the hash table capacity to the next size according to the 
+/* Expands the oSymTable capacity to the next size according to the 
    SIZES array, rehashing all bindings in the process */
 static void SymTable_expand(SymTable_T oSymTable);
 
@@ -213,7 +213,7 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount) {
    return uHash % uBucketCount;
 }
 
-/* Expands the hash table capacity to the next size according to the 
+/* Expands the oSymTable capacity to the next size according to the 
    SIZES array, rehashing all bindings in the process */
 static void SymTable_expand(SymTable_T oSymTable) {
     struct Binding *bind1, *bind2, **buckets;
