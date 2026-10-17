@@ -9,16 +9,22 @@
 /* struct to represent linked list for symbol table ADT, holding the 
    size and the first node of the linked list */
 struct SymTable {size_t numBindings; struct Node* first;};
-/* struct to represent a node of the linked list, holding the key-value
-   pair and a pointer to the next node */
-struct Node {const char* key; const void* value; struct Node* next;};
+/* struct to represent a node of the linked list */
+struct Node {
+    /* key of the binding */
+    const char* key; 
+    /* value of the binding */
+    const void* value; 
+    /* pointer to next binding in the list */
+    struct Node* next;
+};
 
 /* returns new instance of the symbol table */
 SymTable_T SymTable_new(void) {
     return (SymTable_T)calloc(1, sizeof(struct SymTable));
 }
 
-/* frees all memory held by the symbol table */
+/* frees all memory held by the oSymTable */
 void SymTable_free(SymTable_T oSymTable) {
     struct Node *node1, *node2;
     assert(oSymTable != NULL);
@@ -31,14 +37,15 @@ void SymTable_free(SymTable_T oSymTable) {
     free(oSymTable);
 }
 
-/* returns number of bindings held by the table */
+/* returns number of bindings held by oSymTable */
 size_t SymTable_getLength(SymTable_T oSymTable) {
     assert(oSymTable != NULL);
     return oSymTable->numBindings;
 }
 
-/* inserts new binding if the binding is not already present. Otherwise,
-   updates the value of the existing binding */
+/* inserts new binding if the binding with key pcKey is not already 
+   present. Otherwise, updates the value of the existing binding to 
+   pvValue. */
 int SymTable_put(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue) {
         struct Node* node;
@@ -65,7 +72,8 @@ int SymTable_put(SymTable_T oSymTable,
         return 1;
 }
 
-/* updates value of binding associated with provided key if present */
+/* updates value of binding associated with key pcKey to pvValue if 
+   present in oSymTable */
 void *SymTable_replace(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue) {
         struct Node* node;
@@ -84,7 +92,7 @@ void *SymTable_replace(SymTable_T oSymTable,
         return NULL;
 }
 
-/* returns whether the table holds a binding with the provided key */
+/* returns whether oSymtable holds a binding with key pcKey */
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     struct Node* node;
     assert(oSymTable != NULL && pcKey);
@@ -97,8 +105,8 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     return 0;
 }
 
-/* returns the value associated with the provided key if present 
-   in the table */
+/* returns the value associated with key pcKey if present in 
+   oSymTable */
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     struct Node* node;
     assert(oSymTable != NULL && pcKey);
@@ -112,7 +120,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     return NULL;
 }
 
-/* removes binding associated with key if present */
+/* removes binding associated with key pcKey if present in oSymTable */
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     struct Node *node1 = NULL, *node2;
     void* value;
@@ -135,7 +143,8 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     return NULL;
 }
 
-/* runs the provided function on all bindings within the table */
+/* runs pfApply with extra arguments pvExtra on all bindings within 
+   oSymTable */
 void SymTable_map(SymTable_T oSymTable, 
     void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
     const void *pvExtra) {

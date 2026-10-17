@@ -18,19 +18,24 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount);
    SIZES array, rehashing all bindings in the process */
 static void expand(SymTable_T oSymTable);
 
-/* struct to represent hash table for symbol table ADT, holding the 
-   current capacity of the hash table, the number of bindings, and 
-   a pointer to the array of binding pointers */
+/* struct to represent hash table for symbol table ADT */
 struct SymTable {
+    /* index of the number of buckets / capacity of bindings in SIZES
+       array */
     int iCapacity;
+    /* number of bindings currently in the table */
     size_t numBindings;
+    /* pointer to array of Binding pointers representing the buckets 
+       of the hash table */
     struct Binding** buckets;
 };
-/* struct to represent a binding of the table, holding the key-value 
-   pair and a pointer to the next pointer in the list*/
+/* struct to represent a binding of the table */
 struct Binding {
+    /* key of the binding */
     const char* key; 
+    /* value of the binding */
     const void* value; 
+    /* pointer to next binding in the list */
     struct Binding* next;
 };
 
@@ -48,7 +53,7 @@ SymTable_T SymTable_new(void) {
     return table;
 }
 
-/* frees all memory held by the symbol table */
+/* frees all memory held by oSymTable */
 void SymTable_free(SymTable_T oSymTable) {
     struct Binding *bind1, *bind2;
     size_t idx;
@@ -65,14 +70,15 @@ void SymTable_free(SymTable_T oSymTable) {
     free(oSymTable);
 }
 
-/* returns number of bindings held by the table */
+/* returns number of bindings held by oSymTable */
 size_t SymTable_getLength(SymTable_T oSymTable) {
     assert(oSymTable != NULL);
     return oSymTable->numBindings;
 }
 
-/* inserts new binding if the binding is not already present. Otherwise,
-   updates the value of the existing binding */
+/* inserts new binding if the binding with key pcKey is not already 
+   present in oSymTable. Otherwise, updates the value of the existing 
+   binding to pvValue. */
 int SymTable_put(SymTable_T oSymTable,
 const char *pcKey, const void *pvValue) {
     struct Binding* bind;
@@ -104,7 +110,8 @@ const char *pcKey, const void *pvValue) {
     return 1;
 }
 
-/* updates value of binding associated with provided key if present */
+/* updates value of binding associated with key pcKey to pvValue if 
+   present in oSymTable */
 void *SymTable_replace(SymTable_T oSymTable,
 const char *pcKey, const void *pvValue) {
     struct Binding* bind;
@@ -123,7 +130,7 @@ const char *pcKey, const void *pvValue) {
     return NULL;
 }
 
-/* returns whether the table holds a binding with the provided key */
+/* returns whether oSymtable holds a binding with key pcKey */
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     struct Binding* bind;
     size_t hash;
@@ -136,8 +143,8 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     return 0;
 }
 
-/* returns the value associated with the provided key if present 
-   in the table */
+/* returns the value associated with key pcKey if present in 
+   oSymTable */
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     struct Binding* bind;
     size_t hash;
@@ -151,7 +158,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     return NULL;
 }
 
-/* removes binding associated with key if present */
+/* removes binding associated with key pcKey if present in oSymTable */
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     struct Binding *bind1, *bind2;
     void* value;
@@ -175,7 +182,8 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     return NULL;
 }
 
-/* runs the provided function on all bindings within the table */
+/* runs pfApply with extra arguments pvExtra on all bindings within 
+   oSymTable */
 void SymTable_map(SymTable_T oSymTable, 
 void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
 const void *pvExtra) {
@@ -190,6 +198,23 @@ const void *pvExtra) {
     }
 }
 
+/* Return a hash code for pcKey that is between 0 and uBucketCount-1,
+   inclusive */
+static size_t SymTable_hash(const char *pcKey, size_t uBucketCount) {
+   const size_t HASH_MULTIPLIER = 65599;
+   size_t u;
+   size_t uHash = 0;
+
+   assert(pcKey != NULL);
+
+   for (u = 0; pcKey[u] != '\0'; u++)
+      uHash = uHash * HASH_MULTIPLIER + (size_t)pcKey[u];
+
+   return uHash % uBucketCount;
+}
+
+/* Expands the hash table capacity to the next size according to the 
+   SIZES array, rehashing all bindings in the process */
 static void expand(SymTable_T oSymTable) {
     struct Binding *bind1, *bind2, **buckets;
     size_t hash, idx = 0, numBuckets;
@@ -214,17 +239,4 @@ static void expand(SymTable_T oSymTable) {
     free(oSymTable->buckets);
     oSymTable->buckets = buckets;
     oSymTable->iCapacity++;
-}
-
-static size_t SymTable_hash(const char *pcKey, size_t uBucketCount) {
-   const size_t HASH_MULTIPLIER = 65599;
-   size_t u;
-   size_t uHash = 0;
-
-   assert(pcKey != NULL);
-
-   for (u = 0; pcKey[u] != '\0'; u++)
-      uHash = uHash * HASH_MULTIPLIER + (size_t)pcKey[u];
-
-   return uHash % uBucketCount;
 }
