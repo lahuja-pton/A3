@@ -189,7 +189,7 @@ void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
 const void *pvExtra) {
     struct Binding* bind;
     size_t idx = 0;
-    assert(oSymTable != NULL && pfApply != NULL);
+    assert(oSymTable != NULL && pfApply != NULL && pvExtra != NULL);
 
     while (idx < SIZES[oSymTable->iCapacity]) {
         for (bind = oSymTable->buckets[idx]; bind; bind = bind->next) 
