@@ -117,7 +117,7 @@ const char *pcKey, const void *pvValue) {
     struct Binding* bind;
     void* value;
     size_t hash;
-    assert(oSymTable != NULL && pcKey);
+    assert(oSymTable != NULL && pcKey && pvValue);
 
     hash = SymTable_hash(pcKey, SIZES[oSymTable->iCapacity]);
     for (bind = oSymTable->buckets[hash]; bind; bind = bind->next) {
@@ -189,7 +189,7 @@ void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
 const void *pvExtra) {
     struct Binding* bind;
     size_t idx = 0;
-    assert(oSymTable != NULL && pfApply != NULL && pvExtra != NULL);
+    assert(oSymTable != NULL && pfApply != NULL);
 
     while (idx < SIZES[oSymTable->iCapacity]) {
         for (bind = oSymTable->buckets[idx]; bind; bind = bind->next) 
