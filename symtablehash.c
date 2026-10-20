@@ -117,7 +117,7 @@ const char *pcKey, const void *pvValue) {
     struct Binding* bind;
     void* value;
     size_t hash;
-    assert(oSymTable != NULL && pcKey && pvValue);
+    assert(oSymTable != NULL && pcKey);
 
     hash = SymTable_hash(pcKey, SIZES[oSymTable->iCapacity]);
     for (bind = oSymTable->buckets[hash]; bind; bind = bind->next) {
