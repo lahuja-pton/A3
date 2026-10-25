@@ -9,8 +9,6 @@
 /* array of all possible capacities of the hash table */
 static const size_t SIZES[] = 
     {509, 1021, 2039, 4093, 8191, 16381, 32749, 65521};
-/* number of possible capacities */
-static const int SIZE_LEN = 8;
 /* Return a hash code for pcKey that is between 0 and uBucketCount-1,
    inclusive */
 static size_t SymTable_hash(const char *pcKey, size_t uBucketCount);
@@ -220,7 +218,8 @@ static void SymTable_expand(SymTable_T oSymTable) {
     size_t hash, idx = 0, numBuckets;
     assert(oSymTable != NULL);
 
-    if (oSymTable->iCapacity == SIZE_LEN-1) return;
+    if (oSymTable->iCapacity == sizeof(SIZES) / sizeof(SIZES[0]) - 1) 
+        return;
     numBuckets = SIZES[oSymTable->iCapacity+1];
     buckets = (struct Binding**)
         calloc(numBuckets, sizeof(struct Binding*));
