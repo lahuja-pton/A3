@@ -216,9 +216,10 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount) {
 static void SymTable_expand(SymTable_T oSymTable) {
     struct Binding *bind1, *bind2, **buckets;
     size_t hash, idx = 0, numBuckets;
+    int sizeLen;
     assert(oSymTable != NULL);
 
-    int sizeLen = (int)(sizeof(SIZES) / sizeof(SIZES[0]) - 1)
+    sizeLen = (int)(sizeof(SIZES) / sizeof(SIZES[0]) - 1);
     if (oSymTable->iCapacity == sizeLen) return;
     numBuckets = SIZES[oSymTable->iCapacity+1];
     buckets = (struct Binding**)
