@@ -218,8 +218,8 @@ static void SymTable_expand(SymTable_T oSymTable) {
     size_t hash, idx = 0, numBuckets;
     assert(oSymTable != NULL);
 
-    if (oSymTable->iCapacity == sizeof(SIZES) / sizeof(SIZES[0]) - 1) 
-        return;
+    int sizeLen = (int)(sizeof(SIZES) / sizeof(SIZES[0]) - 1)
+    if (oSymTable->iCapacity == sizeLen) return;
     numBuckets = SIZES[oSymTable->iCapacity+1];
     buckets = (struct Binding**)
         calloc(numBuckets, sizeof(struct Binding*));
